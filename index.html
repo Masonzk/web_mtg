@@ -92,6 +92,35 @@ body {
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+<script type="module">
+	import {joinRoom} from 'https://esm.run/trystero'
+	window.trystero_callbacks = { onConnect: null };
+	window.trystero_data = { username: "" };
+	window.joinLobby = function(isHost, localName) {
+		window.room = joinRoom({appId: 'web_mtg_2110'}, 'testid2110');
+
+		const [sendName, getName] = window.room.makeAction('set_name');
+
+		window.room.onPeerJoin(peerId => console.log(`${peerId} joined`));
+
+		getName((name, peerId) => {
+            console.log("Received name:", name);
+            window.trystero_data.remoteUsername = name;
+
+            if (!isHost && window.trystero_callbacks.onConnect) {
+                window.trystero_callbacks.onConnect(name);
+            }
+        });
+
+        window.room.onPeerJoin(peerId => {
+            sendName(localName, peerId);
+
+            if (isHost && window.trystero_callbacks.onConnect) {
+                window.trystero_callbacks.onConnect(); 
+            }
+        });
+	}
+</script>
 
 	</head>
 	<body>
@@ -111,13 +140,8 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-<<<<<<< HEAD
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":5607012,"index.wasm":35740641},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":6325308,"index.wasm":35749181},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
-=======
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":5436920,"index.wasm":36022222},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
-const GODOT_THREADS_ENABLED = true;
->>>>>>> parent of f6e937f (teteet)
 const engine = new Engine(GODOT_CONFIG);
 
 (function () {
